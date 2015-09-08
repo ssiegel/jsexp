@@ -32,7 +32,7 @@ var mScreenQuad;
 
 var mToggled = false;
 
-var mMinusOnes = new THREE.Vector2(-1, -1);
+var mMinusOnes = new THREE.Vector3(-1, -1, -1);
 
 // Some presets.
 var presets = [
@@ -102,6 +102,7 @@ init = function()
     canvas.onmousedown = onMouseDown;
     canvas.onmouseup = onMouseUp;
     canvas.onmousemove = onMouseMove;
+    canvas.oncontextmenu = function() { return false; };
     
     mRenderer = new THREE.WebGLRenderer({canvas: canvas, preserveDrawingBuffer: true});
 
@@ -117,7 +118,7 @@ init = function()
         delta: {type: "f", value: 1.0},
         feed: {type: "f", value: feed},
         kill: {type: "f", value: kill},
-        brush: {type: "v2", value: new THREE.Vector2(-10, -10)},
+        brush: {type: "v3", value: new THREE.Vector3(-10, -10, 0.0)},
         color1: {type: "v4", value: new THREE.Vector4(0, 0, 0.0, 0)},
         color2: {type: "v4", value: new THREE.Vector4(0, 1, 0, 0.2)},
         color3: {type: "v4", value: new THREE.Vector4(1, 1, 0, 0.21)},
@@ -147,7 +148,7 @@ init = function()
     resize(canvas.clientWidth, canvas.clientHeight);
     
     render(0);
-    mUniforms.brush.value = new THREE.Vector2(0.5, 0.5);
+    mUniforms.brush.value = new THREE.Vector3(0.5, 0.5, 0.9);
     mLastTime = new Date().getTime();
     requestAnimationFrame(render);
 }
@@ -257,7 +258,7 @@ var onMouseMove = function(e)
     mMouseY = ev.pageY - canvasQ.offset().top; //  scrolled documents too
     
     if(mMouseDown)
-        mUniforms.brush.value = new THREE.Vector2(mMouseX/canvasWidth, 1-mMouseY/canvasHeight);
+        mUniforms.brush.value = new THREE.Vector3(mMouseX/canvasWidth, 1-mMouseY/canvasHeight, ev.button == 0 ? 0.9 : 0.0);
 }
 
 var onMouseDown = function(e)
@@ -265,7 +266,7 @@ var onMouseDown = function(e)
     var ev = e ? e : window.event;
     mMouseDown = true;
     
-    mUniforms.brush.value = new THREE.Vector2(mMouseX/canvasWidth, 1-mMouseY/canvasHeight);
+    mUniforms.brush.value = new THREE.Vector3(mMouseX/canvasWidth, 1-mMouseY/canvasHeight, ev.button == 0 ? 0.9 : 0.0);
 }
 
 var onMouseUp = function(e)
@@ -275,7 +276,7 @@ var onMouseUp = function(e)
 
 clean = function()
 {
-    mUniforms.brush.value = new THREE.Vector2(-10, -10);
+    mUniforms.brush.value = new THREE.Vector3(-10, -10, 0.0);
 }
 
 snapshot = function()

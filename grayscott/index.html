@@ -28,7 +28,7 @@
             uniform float delta;
             uniform float feed;
             uniform float kill;
-            uniform vec2 brush;
+            uniform vec3 brush;
             
             vec2 texel = vec2(1.0/screenWidth, 1.0/screenHeight);
             float step_x = 1.0/screenWidth;
@@ -38,7 +38,7 @@
             {
                 if(brush.x < -5.0)
                 {
-                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                    gl_FragColor = vec4(1.0, brush.z, 0.0, 1.0);
                     return;
                 }
                 
@@ -58,10 +58,10 @@
                 
                 if(brush.x > 0.0)
                 {
-                    vec2 diff = (vUv - brush)/texel;
+                    vec2 diff = (vUv - brush.xy)/texel;
                     float dist = dot(diff, diff);
                     if(dist < 5.0)
-                        dst.g = 0.9;
+                        dst.g = brush.z;
                 }
                 
                 gl_FragColor = vec4(dst.r, dst.g, 0.0, 1.0);
