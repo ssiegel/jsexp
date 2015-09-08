@@ -112,6 +112,7 @@ init = function()
     mScene.add(mCamera);
     
     mUniforms = {
+        seed: {type: "f", value: undefined},
         screenWidth: {type: "f", value: undefined},
         screenHeight: {type: "f", value: undefined},
         tSource: {type: "t", value: undefined},
@@ -147,8 +148,9 @@ init = function()
     
     resize(canvas.clientWidth, canvas.clientHeight);
     
+    mUniforms.seed.value = Math.random();
     render(0);
-    mUniforms.brush.value = new THREE.Vector3(0.5, 0.5, 0.9);
+    mUniforms.brush.value = new THREE.Vector3(0.5+(Math.random()-0.5)/canvasWidth, 0.5+(Math.random()-0.5)/canvasHeight, 0.9);
     mLastTime = new Date().getTime();
     requestAnimationFrame(render);
 }
@@ -277,6 +279,7 @@ var onMouseUp = function(e)
 clean = function()
 {
     mUniforms.brush.value = new THREE.Vector3(-10, -10, 0.0);
+    mUniforms.seed.value = Math.random();
 }
 
 snapshot = function()
